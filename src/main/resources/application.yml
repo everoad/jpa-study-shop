@@ -1,0 +1,21 @@
+spring:
+  datasource:
+    username: postgres
+    password: postgres
+    url: jdbc:postgresql://localhost:5432/shop
+    driver-class-name: org.postgresql.Driver
+    sql-script-encoding: utf-8
+
+  jpa:
+    hibernate.ddl-auto: create
+    properties:
+      hibernate:
+        format_sql: true
+        connection:
+          characterEncoding: utf-8
+          Charset: utf-8
+          useUnicode: true
+
+logging.level:
+  org.hibernate.SQL: DEBUG
+  org.hibernate.type: TRACE
