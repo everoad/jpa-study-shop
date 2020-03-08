@@ -7,7 +7,7 @@ spring:
     sql-script-encoding: utf-8
 
   jpa:
-    hibernate.ddl-auto: create
+    hibernate.ddl-auto: update
     properties:
       hibernate:
         format_sql: true
@@ -15,6 +15,14 @@ spring:
           characterEncoding: utf-8
           Charset: utf-8
           useUnicode: true
+        jdbc.lob.non_contextual_creation: true
+
+  freemarker:
+    cache: false
+
+  devtools:
+    livereload:
+      enabled: true
 
 logging.level:
   org.hibernate.SQL: DEBUG

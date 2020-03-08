@@ -1,8 +1,10 @@
 package com.kbj.shop.service;
 
+import com.kbj.shop.controller.BookForm;
 import com.kbj.shop.domain.item.Item;
 import com.kbj.shop.repository.ItemRepository;
 import lombok.RequiredArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,6 +20,12 @@ public class ItemService {
     @Transactional
     public void saveItem(Item item) {
         itemRepository.save(item);
+    }
+
+    @Transactional
+    public void updateItem(Long itemId, BookForm form) {
+        Item findItem = itemRepository.findById(itemId);
+        findItem.change(form);
     }
 
     public List<Item> findItems() {

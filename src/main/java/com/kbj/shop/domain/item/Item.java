@@ -1,6 +1,7 @@
 package com.kbj.shop.domain.item;
 
 
+import com.kbj.shop.controller.BookForm;
 import com.kbj.shop.domain.Category;
 import com.kbj.shop.exception.NotEnoughStockException;
 import lombok.*;
@@ -12,7 +13,7 @@ import java.util.List;
 @Entity
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
 @DiscriminatorColumn(name = "dType")
-@Getter @Setter
+@Getter @ToString
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public abstract class Item {
 
