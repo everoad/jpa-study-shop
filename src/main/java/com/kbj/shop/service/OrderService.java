@@ -1,9 +1,7 @@
 package com.kbj.shop.service;
 
-import com.kbj.shop.domain.Delivery;
-import com.kbj.shop.domain.Member;
-import com.kbj.shop.domain.Order;
-import com.kbj.shop.domain.OrderItem;
+import com.kbj.shop.domain.*;
+import com.kbj.shop.domain.item.Book;
 import com.kbj.shop.domain.item.Item;
 import com.kbj.shop.repository.ItemRepository;
 import com.kbj.shop.repository.MemberRepository;
@@ -12,7 +10,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -26,20 +27,35 @@ public class OrderService {
     //주문
     @Transactional
     public Long order(Long memberId, Long itemId, int count) {
-        //엔티티 조회
-        Member member = memberRepository.findById(memberId);
-        Item item = itemRepository.findById(itemId);
+        //회원 조회
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isEmpty()) {
+            throw new NoResultException("No member data by memberId=" + memberId);
+        }
 
-        //배송정보 조회
-        Delivery delivery = Delivery.builder()
-                .address(member.getAddress())
+        //상품 조회
+        Optional<Item> optionalItem = itemRepository.findById(itemId);
+        if (optionalItem.isEmpty()) {
+            throw new NoResultException("No item data by itemId=" + itemId);
+        }
+
+        Member member = optionalMember.get();
+        Item item = optionalItem.get();
+
+        // 배송을 위한 주소 생성
+        Address address = member.getAddress();
+
+        // 상품 생성
+        List<OrderItemDto> orderItems = new ArrayList<>();
+        OrderItemDto orderItemDto = OrderItemDto.builder()
+                .item(item)
+                .count(count)
+                .orderPrice(item.getPrice())
                 .build();
-
-        //주문상품 생성
-        OrderItem orderItem = OrderItem.createOrderItem(item, item.getPrice(), count);
+        orderItems.add(orderItemDto);
 
         //주문 생성
-        Order order = Order.createOrder(member, delivery, orderItem);
+        Order order = Order.createEntity(member, address, orderItems);
 
         //주문 저장
         orderRepository.save(order);
@@ -60,7 +76,7 @@ public class OrderService {
     }
 
     //검색
-//    public List<Order> findOrders(OrderSearch orderSearch) {
-//        return orderRepository.findAll(orderSearch);
-//    }
+    public List<Order> findOrders(OrderSearch orderSearch) {
+        return orderRepository.findAll(orderSearch);
+    }
 }

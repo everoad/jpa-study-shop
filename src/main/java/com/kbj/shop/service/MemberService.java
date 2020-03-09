@@ -1,12 +1,15 @@
 package com.kbj.shop.service;
 
+import com.kbj.shop.domain.MemberDto;
 import com.kbj.shop.domain.Member;
 import com.kbj.shop.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.NoResultException;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @Transactional(readOnly = true)
@@ -18,11 +21,12 @@ public class MemberService {
 
     /**
      * 회원 가입
-     * @param member
+     * @param memberDto
      * @return memberId
      */
     @Transactional
-    public Long join(Member member) {
+    public Long join(MemberDto memberDto) {
+        Member member = Member.createEntity(memberDto);
         validateDuplicateMember(member); //중복 회원 검증
         memberRepository.save(member);
         return member.getId();
@@ -49,7 +53,11 @@ public class MemberService {
      * @return Member
      */
     public Member findOne(Long memberId) {
-        return memberRepository.findById(memberId);
+        Optional<Member> optionalMember = memberRepository.findById(memberId);
+        if (optionalMember.isEmpty()) {
+            throw new NoResultException();
+        }
+        return optionalMember.get();
     }
 
 

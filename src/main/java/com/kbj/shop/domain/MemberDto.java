@@ -1,4 +1,4 @@
-package com.kbj.shop.controller;
+package com.kbj.shop.domain;
 
 import lombok.*;
 
@@ -6,7 +6,7 @@ import javax.validation.constraints.NotEmpty;
 
 @Getter @Setter @Builder
 @NoArgsConstructor @AllArgsConstructor
-public class MemberForm {
+public class MemberDto {
 
     @NotEmpty(message = "회원 이름은 필수 입니다.")
     private String name;

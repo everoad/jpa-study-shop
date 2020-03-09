@@ -5,9 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity @Builder
-@Getter @Setter
-@NoArgsConstructor @AllArgsConstructor
+@Entity @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Delivery {
 
     @Id @GeneratedValue
@@ -22,5 +21,14 @@ public class Delivery {
 
     @Enumerated(EnumType.STRING)
     private DeliveryStatus status; // READY, COMP
+
+    //==생성 메서드==//
+    public static Delivery createEntity(Order order, Address address) {
+        Delivery entity = new Delivery();
+        entity.address = address;
+        entity.order = order;
+        entity.status = DeliveryStatus.READY;
+        return entity;
+    }
 
 }

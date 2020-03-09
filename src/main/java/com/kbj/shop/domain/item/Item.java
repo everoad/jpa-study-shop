@@ -1,7 +1,6 @@
 package com.kbj.shop.domain.item;
 
 
-import com.kbj.shop.controller.BookForm;
 import com.kbj.shop.domain.Category;
 import com.kbj.shop.exception.NotEnoughStockException;
 import lombok.*;
@@ -35,6 +34,11 @@ public abstract class Item {
         this.stockQuantity = stockQuantity;
     }
 
+    @Transient
+    public String getDiscriminatorValue() {
+        return this.getClass().getAnnotation(DiscriminatorValue.class).value();
+    }
+
     //==비즈니스 로직==//
 
     /**
@@ -55,6 +59,12 @@ public abstract class Item {
            throw new NotEnoughStockException("need more stock");
        }
        this.stockQuantity = restStock;
+    }
+
+    public void change(BookDto form) {
+        this.name = form.getName();
+        this.price = form.getPrice();
+        this.stockQuantity = form.getStockQuantity();
     }
 
 }

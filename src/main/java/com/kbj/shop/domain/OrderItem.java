@@ -5,10 +5,8 @@ import lombok.*;
 
 import javax.persistence.*;
 
-@Entity
-@Getter @Setter @Builder
+@Entity @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
-@AllArgsConstructor
 public class OrderItem {
 
     @Id @GeneratedValue
@@ -29,13 +27,14 @@ public class OrderItem {
 
 
     //==생성 매서드==//
-    public static OrderItem createOrderItem(Item item, int orderPrice, int count) {
-        OrderItem orderItem = OrderItem.builder()
-                .item(item)
-                .orderPrice(orderPrice)
-                .count(count)
-                .build();
+    public static OrderItem createEntity(Order order, Item item, int count) {
+        OrderItem orderItem = new OrderItem();
+        orderItem.item = item;
+        orderItem.order = order;
+        orderItem.orderPrice = item.getPrice();
+        orderItem.count = count;
 
+        //재고 감소
         item.removeStock(count);
         return orderItem;
     }
@@ -60,4 +59,5 @@ public class OrderItem {
     public int getTotalPrice() {
         return getOrderPrice() * getCount();
     }
+
 }

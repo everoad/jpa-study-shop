@@ -6,9 +6,8 @@ import javax.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
-@Entity
-@Getter @Setter @Builder
-@NoArgsConstructor @AllArgsConstructor
+@Entity @Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Member {
 
     @Id @GeneratedValue
@@ -21,8 +20,21 @@ public class Member {
     @Embedded
     private Address address;
 
-    @Builder.Default
     @OneToMany(mappedBy = "member", fetch = FetchType.LAZY)
     private List<Order> orders = new ArrayList<>();
 
+
+    //==생성 메서드==//
+
+    /**
+     * Member Entity 생성
+     * @param memberDto
+     * @return
+     */
+    public static Member createEntity(MemberDto memberDto) {
+        Member member = new Member();
+        member.name = memberDto.getName();
+        member.address = new Address(memberDto.getCity(), memberDto.getStreet(), memberDto.getZipCode());
+        return member;
+    }
 }

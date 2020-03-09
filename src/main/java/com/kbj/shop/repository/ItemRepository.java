@@ -6,6 +6,7 @@ import org.springframework.stereotype.Repository;
 
 import javax.persistence.EntityManager;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @RequiredArgsConstructor
@@ -13,16 +14,13 @@ public class ItemRepository {
 
     private final EntityManager em;
 
-    public void save(Item item) {
-        if (item.getId() == null) {
-            em.persist(item);
-        } else {
-            em.merge(item);
-        }
+    public Long save(Item item) {
+        em.persist(item);
+        return item.getId();
     }
 
-    public Item findById(Long id) {
-        return em.find(Item.class, id);
+    public  Optional<Item> findById(Long id) {
+        return Optional.ofNullable(em.find(Item.class, id));
     }
 
     public List<Item> findAll() {

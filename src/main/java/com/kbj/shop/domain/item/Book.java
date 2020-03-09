@@ -1,6 +1,6 @@
 package com.kbj.shop.domain.item;
 
-import com.kbj.shop.controller.BookForm;
+import com.kbj.shop.common.ItemType;
 import lombok.*;
 
 import javax.persistence.DiscriminatorValue;
@@ -15,14 +15,15 @@ public class Book extends Item {
     private String author;
     private String isbn;
 
-    @Builder
-    public Book(Long id, String name, int price, int stockQuantity, String author, String isbn) {
-        super(id, name, price, stockQuantity);
-        this.author = author;
-        this.isbn = isbn;
+
+    public static Book createEntity(BookDto dto) {
+        Book entity = new Book();
+        return entity;
     }
 
-    public void change(BookForm form) {
-        form.getName();
+    public void change(BookDto form) {
+        super.change(form);
+        this.author = form.getAuthor();
+        this.isbn = form.getIsbn();
     }
 }
